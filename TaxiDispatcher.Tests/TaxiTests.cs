@@ -10,7 +10,7 @@ namespace TaxiDispatcher.Tests
         public void RideFrom5To0()
         {
             Scheduler scheduler = new Scheduler();
-            Scheduler.Ride ride = scheduler.OrderRide(5, 0, Constants.City, new DateTime(2018, 1, 1, 23, 0, 0));
+            var ride = scheduler.OrderRide(5, 0, Constants.City, new DateTime(2018, 1, 1, 23, 0, 0));
             scheduler.AcceptRide(ride);
 
             Assert.Equal(100, ride.Price);
@@ -20,7 +20,7 @@ namespace TaxiDispatcher.Tests
         public void RideFrom0to12()
         {
             Scheduler scheduler = new Scheduler();
-            Scheduler.Ride ride = scheduler.OrderRide(0, 12, Constants.InterCity, new DateTime(2018, 1, 1, 9, 0, 0));
+            var ride = scheduler.OrderRide(0, 12, Constants.InterCity, new DateTime(2018, 1, 1, 9, 0, 0));
             scheduler.AcceptRide(ride);
 
             Assert.Equal(240, ride.Price);
@@ -32,7 +32,7 @@ namespace TaxiDispatcher.Tests
             Scheduler scheduler = new Scheduler();
 
             //  setup (make a driver busy)
-            Scheduler.Ride ride = scheduler.OrderRide(5, 0, Constants.City, new DateTime(2018, 1, 1, 23, 0, 0));
+            var ride = scheduler.OrderRide(5, 0, Constants.City, new DateTime(2018, 1, 1, 23, 0, 0));
             scheduler.AcceptRide(ride);
 
             
@@ -57,7 +57,7 @@ namespace TaxiDispatcher.Tests
             Scheduler scheduler = new Scheduler();
 
             //  setup
-            Scheduler.Ride ride = scheduler.OrderRide(5, 0, Constants.City, new DateTime(2018, 1, 1, 23, 0, 0));
+            var ride = scheduler.OrderRide(5, 0, Constants.City, new DateTime(2018, 1, 1, 23, 0, 0));
             scheduler.AcceptRide(ride);
             ride = scheduler.OrderRide(0, 12, Constants.InterCity, new DateTime(2018, 1, 1, 9, 0, 0));
             scheduler.AcceptRide(ride);
@@ -65,7 +65,7 @@ namespace TaxiDispatcher.Tests
             scheduler.AcceptRide(ride);
 
             int total = 0;
-            foreach (Scheduler.Ride r in scheduler.GetRideList(2))
+            foreach (var r in scheduler.GetRideList(2))
             {
                 total += r.Price;
             }
