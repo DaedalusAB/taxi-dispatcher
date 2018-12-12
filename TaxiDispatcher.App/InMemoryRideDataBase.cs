@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using static TaxiDispatcher.App.Scheduler;
 
 namespace TaxiDispatcher.App
@@ -9,41 +10,16 @@ namespace TaxiDispatcher.App
 
         public static void SaveRide(Ride ride)
         {
-            int max_id = Rides.Count == 0 ? 0 : Rides[0].Ride_id;
-            foreach (Ride r in Rides)
-            {
-                if (r.Ride_id > max_id)
-                    max_id = r.Ride_id;
-            }
-
-            ride.Ride_id = max_id + 1;
+            //  if Rides could be removed from list, this wouldn't guarantee a unique ID anymore;
+            //  but rides aren't removed, so I'm leaving it like this
+            ride.RideId = Rides.Count + 1;
             Rides.Add(ride);
         }
 
-        public static Ride GetRide(int id)
-        {
-            Ride ride = Rides[0];
-            bool found = ride.Ride_id == id;
-            int current = 1;
-            while (!found)
-            {
-                ride = Rides[current];
-                found = ride.Ride_id == id;
-                current += 1;
-            }
+        public static Ride GetRide(int id) =>
+            Rides.FirstOrDefault(r => r.RideId == id);
 
-            return ride;
-        }
-
-        public static List<int> GetRide_Ids()
-        {
-            List<int> ids = new List<int>();
-            foreach (Ride ride in Rides)
-            {
-                ids.Add(ride.Ride_id);
-            }
-
-            return ids;
-        }
+        public static List<int> GetRideIds() =>
+            Rides.Select(r => r.RideId).ToList();
     }
 }

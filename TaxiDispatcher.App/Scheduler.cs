@@ -120,7 +120,7 @@ namespace TaxiDispatcher.App
         public List<Ride> GetRideList(int driver_id)
         {
             List<Ride> rides = new List<Ride>();
-            List<int> ids = InMemoryRideDataBase.GetRide_Ids();
+            List<int> ids = InMemoryRideDataBase.GetRideIds();
             foreach (int id in ids)
             {
                 Ride ride = InMemoryRideDataBase.GetRide(id);
@@ -141,7 +141,7 @@ namespace TaxiDispatcher.App
 
         public class Ride
         {
-            public int Ride_id { get; set; }
+            public int RideId { get; set; }
             public int Location_from { get; set; }
             public int Location_to { get; set; }
             public int Taxi_driver_id { get; set; }

@@ -89,8 +89,6 @@ namespace TaxiDispatcher.Client
                 Console.WriteLine("Price: " + r.Price);
             }
             Console.WriteLine("Total: " + total);
-
-            Console.ReadLine();
         }
     }
 }
