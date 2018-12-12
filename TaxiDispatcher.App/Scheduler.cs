@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TaxiDispatcher.App
 {
-    public partial class Scheduler
+    public class Scheduler
     {
         protected Taxi taxi1 = new Taxi { Taxi_driver_id = 1, Taxi_driver_name = "Predrag", Taxi_company = "Naxi", Location = 1};
         protected Taxi taxi2 = new Taxi { Taxi_driver_id = 2, Taxi_driver_name = "Nenad", Taxi_company = "Naxi", Location = 4 };
@@ -17,35 +17,36 @@ namespace TaxiDispatcher.App
             CalculatePrice(locationFrom, locationTo, rideType, time, bestTaxi, ride);
 
             Console.WriteLine("Ride ordered, price: " + ride.Price);
+
             return ride;
         }
 
         private Taxi FindBestTaxi(int locationFrom)
         {
-            Taxi min_taxi = taxi1;
-            int min_distance = Math.Abs(taxi1.Location - locationFrom);
+            var minTaxi = taxi1;
+            var minDistance = Math.Abs(taxi1.Location - locationFrom);
 
-            if (Math.Abs(taxi2.Location - locationFrom) < min_distance)
+            if (Math.Abs(taxi2.Location - locationFrom) < minDistance)
             {
-                min_taxi = taxi2;
-                min_distance = Math.Abs(taxi2.Location - locationFrom);
+                minTaxi = taxi2;
+                minDistance = Math.Abs(taxi2.Location - locationFrom);
             }
 
-            if (Math.Abs(taxi3.Location - locationFrom) < min_distance)
+            if (Math.Abs(taxi3.Location - locationFrom) < minDistance)
             {
-                min_taxi = taxi3;
-                min_distance = Math.Abs(taxi3.Location - locationFrom);
+                minTaxi = taxi3;
+                minDistance = Math.Abs(taxi3.Location - locationFrom);
             }
 
-            if (Math.Abs(taxi4.Location - locationFrom) < min_distance)
+            if (Math.Abs(taxi4.Location - locationFrom) < minDistance)
             {
-                min_taxi = taxi4;
-                min_distance = Math.Abs(taxi4.Location - locationFrom);
+                minTaxi = taxi4;
+                minDistance = Math.Abs(taxi4.Location - locationFrom);
             }
 
-            if (min_distance > 15)
+            if (minDistance > 15)
                 throw new Exception("There are no available taxi vehicles!");
-            return min_taxi;
+            return minTaxi;
         }
 
         private static Ride CreateRide(int locationFrom, int locationTo, Taxi bestTaxi)
