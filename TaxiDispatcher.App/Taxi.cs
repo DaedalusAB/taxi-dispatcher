@@ -2,9 +2,9 @@
 {
     public class Taxi
     {
-        public int Taxi_driver_id { get; set; }
-        public string Taxi_driver_name { get; set; }
-        public string Taxi_company { get; set; }
+        public int TaxiDriverId { get; set; }
+        public string TaxiDriverName { get; set; }
+        public string TaxiCompany { get; set; }
         public int Location { get; set; }
     }
 }

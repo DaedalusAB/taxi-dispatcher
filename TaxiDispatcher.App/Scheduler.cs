@@ -5,10 +5,10 @@ namespace TaxiDispatcher.App
 {
     public class Scheduler
     {
-        protected Taxi taxi1 = new Taxi { Taxi_driver_id = 1, Taxi_driver_name = "Predrag", Taxi_company = "Naxi", Location = 1};
-        protected Taxi taxi2 = new Taxi { Taxi_driver_id = 2, Taxi_driver_name = "Nenad", Taxi_company = "Naxi", Location = 4 };
-        protected Taxi taxi3 = new Taxi { Taxi_driver_id = 3, Taxi_driver_name = "Dragan", Taxi_company = "Alfa", Location = 6 };
-        protected Taxi taxi4 = new Taxi { Taxi_driver_id = 4, Taxi_driver_name = "Goran", Taxi_company = "Gold", Location = 7 };
+        protected Taxi taxi1 = new Taxi { TaxiDriverId = 1, TaxiDriverName = "Predrag", TaxiCompany = "Naxi", Location = 1};
+        protected Taxi taxi2 = new Taxi { TaxiDriverId = 2, TaxiDriverName = "Nenad", TaxiCompany = "Naxi", Location = 4 };
+        protected Taxi taxi3 = new Taxi { TaxiDriverId = 3, TaxiDriverName = "Dragan", TaxiCompany = "Alfa", Location = 6 };
+        protected Taxi taxi4 = new Taxi { TaxiDriverId = 4, TaxiDriverName = "Goran", TaxiCompany = "Gold", Location = 7 };
 
         public Ride OrderRide(int locationFrom, int locationTo, int rideType, DateTime time)
         {
@@ -52,16 +52,16 @@ namespace TaxiDispatcher.App
         private static Ride CreateRide(int locationFrom, int locationTo, Taxi bestTaxi)
         {
             Ride ride = new Ride();
-            ride.Taxi_driver_id = bestTaxi.Taxi_driver_id;
-            ride.Location_from = locationFrom;
-            ride.Location_to = locationTo;
-            ride.Taxi_driver_name = bestTaxi.Taxi_driver_name;
+            ride.TaxiDriverId = bestTaxi.TaxiDriverId;
+            ride.LocationFrom = locationFrom;
+            ride.LocationTo = locationTo;
+            ride.TaxiDriverName = bestTaxi.TaxiDriverName;
             return ride;
         }
 
         private static void CalculatePrice(int locationFrom, int locationTo, int rideType, DateTime time, Taxi bestTaxi, Ride ride)
         {
-            switch (bestTaxi.Taxi_company)
+            switch (bestTaxi.TaxiCompany)
             {
                 case "Naxi":
                     {
@@ -99,27 +99,27 @@ namespace TaxiDispatcher.App
         {
             InMemoryRideDataBase.SaveRide(ride);
 
-            if (taxi1.Taxi_driver_id == ride.Taxi_driver_id)
+            if (taxi1.TaxiDriverId == ride.TaxiDriverId)
             {
-                taxi1.Location = ride.Location_to;
+                taxi1.Location = ride.LocationTo;
             }
 
-            if (taxi2.Taxi_driver_id == ride.Taxi_driver_id)
+            if (taxi2.TaxiDriverId == ride.TaxiDriverId)
             {
-                taxi2.Location = ride.Location_to;
+                taxi2.Location = ride.LocationTo;
             }
 
-            if (taxi3.Taxi_driver_id == ride.Taxi_driver_id)
+            if (taxi3.TaxiDriverId == ride.TaxiDriverId)
             {
-                taxi3.Location = ride.Location_to;
+                taxi3.Location = ride.LocationTo;
             }
 
-            if (taxi4.Taxi_driver_id == ride.Taxi_driver_id)
+            if (taxi4.TaxiDriverId == ride.TaxiDriverId)
             {
-                taxi4.Location = ride.Location_to;
+                taxi4.Location = ride.LocationTo;
             }
 
-            Console.WriteLine("Ride accepted, waiting for driver: " + ride.Taxi_driver_name);
+            Console.WriteLine("Ride accepted, waiting for driver: " + ride.TaxiDriverName);
         }
 
         public List<Ride> GetRideList(int driverId)
@@ -129,7 +129,7 @@ namespace TaxiDispatcher.App
             foreach (int id in ids)
             {
                 Ride ride = InMemoryRideDataBase.GetRide(id);
-                if (ride.Taxi_driver_id == driverId)
+                if (ride.TaxiDriverId == driverId)
                     rides.Add(ride);
             }
 
