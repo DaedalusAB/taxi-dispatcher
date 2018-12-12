@@ -17,8 +17,7 @@ namespace TaxiDispatcher.App
         public Ride OrderRide(int locationFrom, int locationTo, RideTypeEnum rideType, DateTime time)
         {
             var bestTaxi = FindBestTaxi(locationFrom);
-            var ride = CreateRide(locationFrom, locationTo, bestTaxi);
-            ride.Price = CalculatePrice(locationFrom, locationTo, rideType, time, ride);    // todo check this
+            var ride = new Ride(locationFrom, locationTo, rideType, time, bestTaxi);
 
             Console.WriteLine("Ride ordered, price: " + ride.Price);
 
@@ -34,9 +33,6 @@ namespace TaxiDispatcher.App
 
             return bestTaxi;
         }
-
-        private Ride CreateRide(int locationFrom, int locationTo, Taxi bestTaxi) =>
-            new Ride { Taxi = bestTaxi, LocationFrom = locationFrom, LocationTo = locationTo };
 
         private int CalculatePrice(int locationFrom, int locationTo, RideTypeEnum rideTypeEnum, DateTime time, Ride ride)
         {
