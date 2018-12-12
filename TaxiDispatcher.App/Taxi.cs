@@ -6,7 +6,7 @@ namespace TaxiDispatcher.App
     {
         public int TaxiDriverId { get; set; }
         public string DriverName { get; set; }
-        public string CompanyName { get; set; }
+        public TaxiCompany Company { get; set; }
         public int Location { get; set; }
 
         public int ProximityToLocation(int location) =>

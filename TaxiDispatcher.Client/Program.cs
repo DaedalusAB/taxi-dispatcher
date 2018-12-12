@@ -10,10 +10,10 @@ namespace TaxiDispatcher.Client
         {
             var taxiDriverRepo = new TaxiDriverRepo(new List<Taxi>()
             {
-                new Taxi { TaxiDriverId = 1, DriverName = "Predrag", CompanyName = "Naxi", Location = 1 },
-                new Taxi { TaxiDriverId = 2, DriverName = "Nenad", CompanyName = "Naxi", Location = 4 },
-                new Taxi { TaxiDriverId = 3, DriverName = "Dragan", CompanyName = "Alfa", Location = 6 },
-                new Taxi { TaxiDriverId = 4, DriverName = "Goran", CompanyName = "Gold", Location = 7 }
+                new Taxi { TaxiDriverId = 1, DriverName = "Predrag", Company = new TaxiCompany("Naxi", 10), Location = 1 },
+                new Taxi { TaxiDriverId = 2, DriverName = "Nenad", Company = new TaxiCompany("Naxi", 10), Location = 4 },
+                new Taxi { TaxiDriverId = 3, DriverName = "Dragan", Company = new TaxiCompany("Alfa", 15), Location = 6 },
+                new Taxi { TaxiDriverId = 4, DriverName = "Goran", Company = new TaxiCompany("Gold", 13), Location = 7 }
             });
 
             var scheduler = new Scheduler(taxiDriverRepo);
@@ -21,7 +21,7 @@ namespace TaxiDispatcher.Client
             try
             {
                 Console.WriteLine("Ordering ride from 5 to 0...");
-                var ride = scheduler.OrderRide(5, 0, Constants.City, new DateTime(2018, 1, 1, 23, 0, 0));
+                var ride = scheduler.OrderRide(5, 0, RideTypeEnum.City, new DateTime(2018, 1, 1, 23, 0, 0));
                 scheduler.AcceptRide(ride);
                 Console.WriteLine("");
             }
@@ -39,7 +39,7 @@ namespace TaxiDispatcher.Client
             try
             {
                 Console.WriteLine("Ordering ride from 0 to 12...");
-                Ride ride = scheduler.OrderRide(0, 12, Constants.InterCity, new DateTime(2018, 1, 1, 9, 0, 0));
+                Ride ride = scheduler.OrderRide(0, 12, RideTypeEnum.InnerCity, new DateTime(2018, 1, 1, 9, 0, 0));
                 scheduler.AcceptRide(ride);
                 Console.WriteLine("");
             }
@@ -57,7 +57,7 @@ namespace TaxiDispatcher.Client
             try
             {
                 Console.WriteLine("Ordering ride from 5 to 0...");
-                Ride ride = scheduler.OrderRide(5, 0, Constants.City, new DateTime(2018, 1, 1, 11, 0, 0));
+                Ride ride = scheduler.OrderRide(5, 0, RideTypeEnum.City, new DateTime(2018, 1, 1, 11, 0, 0));
                 scheduler.AcceptRide(ride);
                 Console.WriteLine("");
             }
@@ -75,7 +75,7 @@ namespace TaxiDispatcher.Client
             try
             {
                 Console.WriteLine("Ordering ride from 35 to 12...");
-                Ride ride = scheduler.OrderRide(35, 12, Constants.City, new DateTime(2018, 1, 1, 11, 0, 0));
+                Ride ride = scheduler.OrderRide(35, 12, RideTypeEnum.City, new DateTime(2018, 1, 1, 11, 0, 0));
                 scheduler.AcceptRide(ride);
                 Console.WriteLine("");
             }

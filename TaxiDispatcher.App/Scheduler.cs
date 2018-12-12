@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace TaxiDispatcher.App
 {
@@ -15,11 +14,11 @@ namespace TaxiDispatcher.App
             _taxiDriverRepo = taxiDriverRepo;
         }
 
-        public Ride OrderRide(int locationFrom, int locationTo, int rideType, DateTime time)
+        public Ride OrderRide(int locationFrom, int locationTo, RideTypeEnum rideType, DateTime time)
         {
             var bestTaxi = FindBestTaxi(locationFrom);
             var ride = CreateRide(locationFrom, locationTo, bestTaxi);
-            CalculatePrice(locationFrom, locationTo, rideType, time, bestTaxi, ride);
+            ride.Price = CalculatePrice(locationFrom, locationTo, rideType, time, ride);    // todo check this
 
             Console.WriteLine("Ride ordered, price: " + ride.Price);
 
@@ -36,52 +35,24 @@ namespace TaxiDispatcher.App
             return bestTaxi;
         }
 
-        private Ride CreateRide(int locationFrom, int locationTo, Taxi bestTaxi)
+        private Ride CreateRide(int locationFrom, int locationTo, Taxi bestTaxi) =>
+            new Ride { Taxi = bestTaxi, LocationFrom = locationFrom, LocationTo = locationTo };
+
+        private int CalculatePrice(int locationFrom, int locationTo, RideTypeEnum rideTypeEnum, DateTime time, Ride ride)
         {
-            var ride = new Ride
-            {
-                Taxi = bestTaxi,
-                LocationFrom = locationFrom,
-                LocationTo = locationTo
-            };
+            var price = ride.Taxi.Company.PricePerUnitOfDistance * Math.Abs(locationFrom - locationTo);
 
-            return ride;
-        }
-
-        private void CalculatePrice(int locationFrom, int locationTo, int rideType, DateTime time, Taxi bestTaxi, Ride ride)
-        {
-            switch (bestTaxi.CompanyName)
+            if (rideTypeEnum == RideTypeEnum.InnerCity)
             {
-                case "Naxi":
-                    {
-                        ride.Price = 10 * Math.Abs(locationFrom - locationTo);
-                        break;
-                    }
-                case "Alfa":
-                    {
-                        ride.Price = 15 * Math.Abs(locationFrom - locationTo);
-                        break;
-                    }
-                case "Gold":
-                    {
-                        ride.Price = 13 * Math.Abs(locationFrom - locationTo);
-                        break;
-                    }
-                default:
-                    {
-                        throw new Exception("Ilegal company");
-                    }
-            }
-
-            if (rideType == Constants.InterCity)
-            {
-                ride.Price *= 2;
+                price *= 2;
             }
 
             if (time.Hour < 6 || time.Hour > 22)
             {
-                ride.Price *= 2;
+                price *= 2;
             }
+
+            return price;
         }
 
         public void AcceptRide(Ride ride)

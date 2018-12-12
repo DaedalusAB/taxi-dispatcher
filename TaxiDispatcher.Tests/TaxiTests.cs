@@ -9,17 +9,17 @@ namespace TaxiDispatcher.Tests
     {
         private TaxiDriverRepo _taxiDriverRepo = new TaxiDriverRepo(new List<Taxi>()
         {
-            new Taxi { TaxiDriverId = 1, DriverName = "Predrag", CompanyName = "Naxi", Location = 1 },
-            new Taxi { TaxiDriverId = 2, DriverName = "Nenad", CompanyName = "Naxi", Location = 4 },
-            new Taxi { TaxiDriverId = 3, DriverName = "Dragan", CompanyName = "Alfa", Location = 6 },
-            new Taxi { TaxiDriverId = 4, DriverName = "Goran", CompanyName = "Gold", Location = 7 }
+            new Taxi { TaxiDriverId = 1, DriverName = "Predrag", Company = new TaxiCompany("Naxi", 10), Location = 1 },
+            new Taxi { TaxiDriverId = 2, DriverName = "Nenad", Company = new TaxiCompany("Naxi", 10), Location = 4 },
+            new Taxi { TaxiDriverId = 3, DriverName = "Dragan", Company = new TaxiCompany("Alfa", 15), Location = 6 },
+            new Taxi { TaxiDriverId = 4, DriverName = "Goran", Company = new TaxiCompany("Gold", 13), Location = 7 }
         });
 
         [Fact]
         public void RideFrom5To0()
         {
             Scheduler scheduler = new Scheduler(_taxiDriverRepo);
-            var ride = scheduler.OrderRide(5, 0, Constants.City, new DateTime(2018, 1, 1, 23, 0, 0));
+            var ride = scheduler.OrderRide(5, 0, RideTypeEnum.City, new DateTime(2018, 1, 1, 23, 0, 0));
             scheduler.AcceptRide(ride);
 
             Assert.Equal(100, ride.Price);
@@ -30,9 +30,9 @@ namespace TaxiDispatcher.Tests
         public void RideFrom0to12()
         {
             Scheduler scheduler = new Scheduler(_taxiDriverRepo);
-            var ride = scheduler.OrderRide(5, 0, Constants.City, new DateTime(2018, 1, 1, 23, 0, 0));
+            var ride = scheduler.OrderRide(5, 0, RideTypeEnum.City, new DateTime(2018, 1, 1, 23, 0, 0));
             scheduler.AcceptRide(ride);
-            ride = scheduler.OrderRide(0, 12, Constants.InterCity, new DateTime(2018, 1, 1, 9, 0, 0));
+            ride = scheduler.OrderRide(0, 12, RideTypeEnum.InnerCity, new DateTime(2018, 1, 1, 9, 0, 0));
             scheduler.AcceptRide(ride);
 
             Assert.Equal(240, ride.Price);
@@ -45,11 +45,11 @@ namespace TaxiDispatcher.Tests
             Scheduler scheduler = new Scheduler(_taxiDriverRepo);
 
             //  setup (make a driver busy)
-            var ride = scheduler.OrderRide(5, 0, Constants.City, new DateTime(2018, 1, 1, 23, 0, 0));
+            var ride = scheduler.OrderRide(5, 0, RideTypeEnum.City, new DateTime(2018, 1, 1, 23, 0, 0));
             scheduler.AcceptRide(ride);
 
             
-            ride = scheduler.OrderRide(5, 0, Constants.City, new DateTime(2018, 1, 1, 11, 0, 0));
+            ride = scheduler.OrderRide(5, 0, RideTypeEnum.City, new DateTime(2018, 1, 1, 11, 0, 0));
             scheduler.AcceptRide(ride);
 
             Assert.Equal(75, ride.Price);
@@ -60,7 +60,7 @@ namespace TaxiDispatcher.Tests
         public void OrderWhenDriversAreTooFar()
         {
             Scheduler scheduler = new Scheduler(_taxiDriverRepo);
-            var exception = Assert.Throws<Exception>(() => scheduler.OrderRide(35, 12, Constants.City, new DateTime(2018, 1, 1, 11, 0, 0)));
+            var exception = Assert.Throws<Exception>(() => scheduler.OrderRide(35, 12, RideTypeEnum.City, new DateTime(2018, 1, 1, 11, 0, 0)));
             Assert.Equal("There are no available taxi vehicles!", exception.Message);
             
         }
@@ -71,11 +71,11 @@ namespace TaxiDispatcher.Tests
             Scheduler scheduler = new Scheduler(_taxiDriverRepo);
 
             //  setup
-            var ride = scheduler.OrderRide(5, 0, Constants.City, new DateTime(2018, 1, 1, 23, 0, 0));
+            var ride = scheduler.OrderRide(5, 0, RideTypeEnum.City, new DateTime(2018, 1, 1, 23, 0, 0));
             scheduler.AcceptRide(ride);
-            ride = scheduler.OrderRide(0, 12, Constants.InterCity, new DateTime(2018, 1, 1, 9, 0, 0));
+            ride = scheduler.OrderRide(0, 12, RideTypeEnum.InnerCity, new DateTime(2018, 1, 1, 9, 0, 0));
             scheduler.AcceptRide(ride);
-            ride = scheduler.OrderRide(5, 0, Constants.City, new DateTime(2018, 1, 1, 11, 0, 0));
+            ride = scheduler.OrderRide(5, 0, RideTypeEnum.City, new DateTime(2018, 1, 1, 11, 0, 0));
             scheduler.AcceptRide(ride);
 
             int total = 0;
