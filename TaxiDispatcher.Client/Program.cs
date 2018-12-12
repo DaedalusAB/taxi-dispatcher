@@ -8,12 +8,12 @@ namespace TaxiDispatcher.Client
     {
         static void Main(string[] args)
         {
-            var taxiDriverRepo = new TaxiDriverRepo(new List<TaxiDriver>()
+            var taxiDriverRepo = new TaxiDriverRepo(new List<Taxi>()
             {
-                new TaxiDriver { TaxiDriverId = 1, Name = "Predrag", CompanyName = "Naxi", Location = 1 },
-                new TaxiDriver { TaxiDriverId = 2, Name = "Nenad", CompanyName = "Naxi", Location = 4 },
-                new TaxiDriver { TaxiDriverId = 3, Name = "Dragan", CompanyName = "Alfa", Location = 6 },
-                new TaxiDriver { TaxiDriverId = 4, Name = "Goran", CompanyName = "Gold", Location = 7 }
+                new Taxi { TaxiDriverId = 1, DriverName = "Predrag", CompanyName = "Naxi", Location = 1 },
+                new Taxi { TaxiDriverId = 2, DriverName = "Nenad", CompanyName = "Naxi", Location = 4 },
+                new Taxi { TaxiDriverId = 3, DriverName = "Dragan", CompanyName = "Alfa", Location = 6 },
+                new Taxi { TaxiDriverId = 4, DriverName = "Goran", CompanyName = "Gold", Location = 7 }
             });
 
             var scheduler = new Scheduler(taxiDriverRepo);

@@ -2,10 +2,10 @@
 
 namespace TaxiDispatcher.App
 {
-    public class TaxiDriver
+    public class Taxi
     {
         public int TaxiDriverId { get; set; }
-        public string Name { get; set; }
+        public string DriverName { get; set; }
         public string CompanyName { get; set; }
         public int Location { get; set; }
 

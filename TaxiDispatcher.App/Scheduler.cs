@@ -6,6 +6,8 @@ namespace TaxiDispatcher.App
 {
     public class Scheduler
     {
+        private const int MaxAcceptableDistance = 15;
+
         private readonly TaxiDriverRepo _taxiDriverRepo;
 
         public Scheduler(TaxiDriverRepo taxiDriverRepo)
@@ -24,36 +26,31 @@ namespace TaxiDispatcher.App
             return ride;
         }
 
-        private TaxiDriver FindBestTaxi(int locationFrom)
+        private Taxi FindBestTaxi(int locationFrom)
         {
-            if (!_taxiDriverRepo.TaxiDrivers.Any())
-            {
-                throw new Exception("There are no taxi drivers registered with the Scheduler");
-            }
-            
-            var bestTaxi = _taxiDriverRepo.TaxiDrivers
-                .Aggregate((curBest, t) => (curBest == null || t.ProximityToLocation(locationFrom) < curBest.ProximityToLocation(locationFrom) ? t : curBest));
+            var bestTaxi = _taxiDriverRepo.BestTaxiForLocation(locationFrom);
 
-
-            if (Math.Abs(bestTaxi.Location - locationFrom) > 15)
+            if (Math.Abs(bestTaxi.Location - locationFrom) > MaxAcceptableDistance)
                 throw new Exception("There are no available taxi vehicles!");
 
             return bestTaxi;
         }
 
-        private static Ride CreateRide(int locationFrom, int locationTo, TaxiDriver bestTaxiDriver)
+        private Ride CreateRide(int locationFrom, int locationTo, Taxi bestTaxi)
         {
-            Ride ride = new Ride();
-            ride.TaxiDriverId = bestTaxiDriver.TaxiDriverId;
-            ride.LocationFrom = locationFrom;
-            ride.LocationTo = locationTo;
-            ride.TaxiDriverName = bestTaxiDriver.Name;
+            var ride = new Ride
+            {
+                Taxi = bestTaxi,
+                LocationFrom = locationFrom,
+                LocationTo = locationTo
+            };
+
             return ride;
         }
 
-        private static void CalculatePrice(int locationFrom, int locationTo, int rideType, DateTime time, TaxiDriver bestTaxiDriver, Ride ride)
+        private void CalculatePrice(int locationFrom, int locationTo, int rideType, DateTime time, Taxi bestTaxi, Ride ride)
         {
-            switch (bestTaxiDriver.CompanyName)
+            switch (bestTaxi.CompanyName)
             {
                 case "Naxi":
                     {
@@ -90,9 +87,9 @@ namespace TaxiDispatcher.App
         public void AcceptRide(Ride ride)
         {
             InMemoryRideDataBase.SaveRide(ride);
-            _taxiDriverRepo.TaxiDrivers.Find(t => t.TaxiDriverId == ride.TaxiDriverId).Location = ride.LocationTo;
+            _taxiDriverRepo.TaxiDrivers.Find(t => t.TaxiDriverId == ride.Taxi.TaxiDriverId).Location = ride.LocationTo;
 
-            Console.WriteLine("Ride accepted, waiting for driver: " + ride.TaxiDriverName);
+            Console.WriteLine("Ride accepted, waiting for driver: " + ride.Taxi.DriverName);
         }
 
         public List<Ride> GetRideList(int driverId)
@@ -102,7 +99,7 @@ namespace TaxiDispatcher.App
             foreach (int id in ids)
             {
                 Ride ride = InMemoryRideDataBase.GetRide(id);
-                if (ride.TaxiDriverId == driverId)
+                if (ride.Taxi.TaxiDriverId == driverId)
                     rides.Add(ride);
             }
 

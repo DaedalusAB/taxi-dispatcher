@@ -7,12 +7,12 @@ namespace TaxiDispatcher.Tests
 {
     public class TaxiTests
     {
-        private TaxiDriverRepo _taxiDriverRepo = new TaxiDriverRepo(new List<TaxiDriver>()
+        private TaxiDriverRepo _taxiDriverRepo = new TaxiDriverRepo(new List<Taxi>()
         {
-            new TaxiDriver { TaxiDriverId = 1, Name = "Predrag", CompanyName = "Naxi", Location = 1 },
-            new TaxiDriver { TaxiDriverId = 2, Name = "Nenad", CompanyName = "Naxi", Location = 4 },
-            new TaxiDriver { TaxiDriverId = 3, Name = "Dragan", CompanyName = "Alfa", Location = 6 },
-            new TaxiDriver { TaxiDriverId = 4, Name = "Goran", CompanyName = "Gold", Location = 7 }
+            new Taxi { TaxiDriverId = 1, DriverName = "Predrag", CompanyName = "Naxi", Location = 1 },
+            new Taxi { TaxiDriverId = 2, DriverName = "Nenad", CompanyName = "Naxi", Location = 4 },
+            new Taxi { TaxiDriverId = 3, DriverName = "Dragan", CompanyName = "Alfa", Location = 6 },
+            new Taxi { TaxiDriverId = 4, DriverName = "Goran", CompanyName = "Gold", Location = 7 }
         });
 
         [Fact]
@@ -23,7 +23,7 @@ namespace TaxiDispatcher.Tests
             scheduler.AcceptRide(ride);
 
             Assert.Equal(100, ride.Price);
-            Assert.Equal("Nenad", ride.TaxiDriverName);
+            Assert.Equal("Nenad", ride.Taxi.DriverName);
         }
 
         [Fact]
@@ -36,7 +36,7 @@ namespace TaxiDispatcher.Tests
             scheduler.AcceptRide(ride);
 
             Assert.Equal(240, ride.Price);
-            Assert.Equal("Nenad", ride.TaxiDriverName);
+            Assert.Equal("Nenad", ride.Taxi.DriverName);
         }
 
         [Fact]
@@ -53,7 +53,7 @@ namespace TaxiDispatcher.Tests
             scheduler.AcceptRide(ride);
 
             Assert.Equal(75, ride.Price);
-            Assert.Equal("Dragan", ride.TaxiDriverName);
+            Assert.Equal("Dragan", ride.Taxi.DriverName);
         }
 
         [Fact]
