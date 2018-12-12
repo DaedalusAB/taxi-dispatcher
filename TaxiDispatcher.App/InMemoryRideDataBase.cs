@@ -4,7 +4,7 @@ using static TaxiDispatcher.App.Scheduler;
 
 namespace TaxiDispatcher.App
 {
-    public static class InMemoryRideDataBase
+    public static class InMemoryRideDatabase
     {
         public static List<Ride> Rides = new List<Ride>();
 

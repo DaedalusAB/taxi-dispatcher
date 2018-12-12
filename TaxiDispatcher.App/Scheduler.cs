@@ -17,7 +17,8 @@ namespace TaxiDispatcher.App
         public Ride OrderRide(int locationFrom, int locationTo, RideTypeEnum rideType, DateTime time)
         {
             var bestTaxi = FindBestTaxi(locationFrom);
-            var ride = new Ride(locationFrom, locationTo, rideType, time, bestTaxi);
+            var price = CalculatePrice(locationFrom, locationTo, rideType, time, bestTaxi.Company);
+            var ride = new Ride(locationFrom, locationTo, rideType, time, bestTaxi, price);
 
             Console.WriteLine("Ride ordered, price: " + ride.Price);
 
@@ -34,9 +35,9 @@ namespace TaxiDispatcher.App
             return bestTaxi;
         }
 
-        private int CalculatePrice(int locationFrom, int locationTo, RideTypeEnum rideTypeEnum, DateTime time, Ride ride)
+        private int CalculatePrice(int locationFrom, int locationTo, RideTypeEnum rideTypeEnum, DateTime time, TaxiCompany company)
         {
-            var price = ride.Taxi.Company.PricePerUnitOfDistance * Math.Abs(locationFrom - locationTo);
+            var price = company.PricePerUnitOfDistance * Math.Abs(locationFrom - locationTo);
 
             if (rideTypeEnum == RideTypeEnum.InnerCity)
             {
@@ -53,7 +54,7 @@ namespace TaxiDispatcher.App
 
         public void AcceptRide(Ride ride)
         {
-            InMemoryRideDataBase.SaveRide(ride);
+            InMemoryRideDatabase.SaveRide(ride);
             _taxiDriverRepo.TaxiDrivers.Find(t => t.TaxiDriverId == ride.Taxi.TaxiDriverId).Location = ride.LocationTo;
 
             Console.WriteLine("Ride accepted, waiting for driver: " + ride.Taxi.DriverName);
@@ -62,10 +63,10 @@ namespace TaxiDispatcher.App
         public List<Ride> GetRideList(int driverId)
         {
             List<Ride> rides = new List<Ride>();
-            List<int> ids = InMemoryRideDataBase.GetRideIds();
+            List<int> ids = InMemoryRideDatabase.GetRideIds();
             foreach (int id in ids)
             {
-                Ride ride = InMemoryRideDataBase.GetRide(id);
+                Ride ride = InMemoryRideDatabase.GetRide(id);
                 if (ride.Taxi.TaxiDriverId == driverId)
                     rides.Add(ride);
             }

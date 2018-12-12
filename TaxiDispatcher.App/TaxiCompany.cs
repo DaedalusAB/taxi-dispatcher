@@ -2,8 +2,8 @@
 {
     public class TaxiCompany
     {
-        public string Name { get; set; }
-        public int PricePerUnitOfDistance { get; set; }
+        public string Name { get; }
+        public int PricePerUnitOfDistance { get; }
 
         public TaxiCompany(string name, int pricePerUnitOfDistance)
         {
