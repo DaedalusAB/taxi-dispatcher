@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TaxiDispatcher.App
 {
-    public class Scheduler
+    public partial class Scheduler
     {
         protected Taxi taxi1 = new Taxi { Taxi_driver_id = 1, Taxi_driver_name = "Predrag", Taxi_company = "Naxi", Location = 1};
         protected Taxi taxi2 = new Taxi { Taxi_driver_id = 2, Taxi_driver_name = "Nenad", Taxi_company = "Naxi", Location = 4 };
@@ -129,24 +129,6 @@ namespace TaxiDispatcher.App
             }
 
             return rides;
-        }
-
-        public class Taxi
-        {
-            public int Taxi_driver_id { get; set; }
-            public string Taxi_driver_name { get; set; }
-            public string Taxi_company { get; set; }
-            public int Location { get; set; }
-        }
-
-        public class Ride
-        {
-            public int RideId { get; set; }
-            public int Location_from { get; set; }
-            public int Location_to { get; set; }
-            public int Taxi_driver_id { get; set; }
-            public string Taxi_driver_name { get; set; }
-            public int Price { get; set; }
         }
     }
 }
