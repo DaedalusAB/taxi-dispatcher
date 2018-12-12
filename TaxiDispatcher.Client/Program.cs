@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using TaxiDispatcher.App;
 
 namespace TaxiDispatcher.Client
@@ -7,7 +8,15 @@ namespace TaxiDispatcher.Client
     {
         static void Main(string[] args)
         {
-            var scheduler = new Scheduler();
+            var taxiDriverRepo = new TaxiDriverRepo(new List<TaxiDriver>()
+            {
+                new TaxiDriver { TaxiDriverId = 1, Name = "Predrag", CompanyName = "Naxi", Location = 1 },
+                new TaxiDriver { TaxiDriverId = 2, Name = "Nenad", CompanyName = "Naxi", Location = 4 },
+                new TaxiDriver { TaxiDriverId = 3, Name = "Dragan", CompanyName = "Alfa", Location = 6 },
+                new TaxiDriver { TaxiDriverId = 4, Name = "Goran", CompanyName = "Gold", Location = 7 }
+            });
+
+            var scheduler = new Scheduler(taxiDriverRepo);
 
             try
             {
@@ -76,7 +85,7 @@ namespace TaxiDispatcher.Client
                 {
                     Console.WriteLine(e.Message);
                     Console.WriteLine("");
-                }  
+                }
                 else
                     throw;
             }

@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TaxiDispatcher.App
 {
     public class Scheduler
     {
-        protected Taxi taxi1 = new Taxi { TaxiDriverId = 1, TaxiDriverName = "Predrag", TaxiCompany = "Naxi", Location = 1};
-        protected Taxi taxi2 = new Taxi { TaxiDriverId = 2, TaxiDriverName = "Nenad", TaxiCompany = "Naxi", Location = 4 };
-        protected Taxi taxi3 = new Taxi { TaxiDriverId = 3, TaxiDriverName = "Dragan", TaxiCompany = "Alfa", Location = 6 };
-        protected Taxi taxi4 = new Taxi { TaxiDriverId = 4, TaxiDriverName = "Goran", TaxiCompany = "Gold", Location = 7 };
+        private readonly TaxiDriverRepo _taxiDriverRepo;
+
+        public Scheduler(TaxiDriverRepo taxiDriverRepo)
+        {
+            _taxiDriverRepo = taxiDriverRepo;
+        }
 
         public Ride OrderRide(int locationFrom, int locationTo, int rideType, DateTime time)
         {
@@ -21,47 +24,36 @@ namespace TaxiDispatcher.App
             return ride;
         }
 
-        private Taxi FindBestTaxi(int locationFrom)
+        private TaxiDriver FindBestTaxi(int locationFrom)
         {
-            var minTaxi = taxi1;
-            var minDistance = Math.Abs(taxi1.Location - locationFrom);
-
-            if (Math.Abs(taxi2.Location - locationFrom) < minDistance)
+            if (!_taxiDriverRepo.TaxiDrivers.Any())
             {
-                minTaxi = taxi2;
-                minDistance = Math.Abs(taxi2.Location - locationFrom);
+                throw new Exception("There are no taxi drivers registered with the Scheduler");
             }
+            
+            var bestTaxi = _taxiDriverRepo.TaxiDrivers
+                .Aggregate((curBest, t) => (curBest == null || t.ProximityToLocation(locationFrom) < curBest.ProximityToLocation(locationFrom) ? t : curBest));
 
-            if (Math.Abs(taxi3.Location - locationFrom) < minDistance)
-            {
-                minTaxi = taxi3;
-                minDistance = Math.Abs(taxi3.Location - locationFrom);
-            }
 
-            if (Math.Abs(taxi4.Location - locationFrom) < minDistance)
-            {
-                minTaxi = taxi4;
-                minDistance = Math.Abs(taxi4.Location - locationFrom);
-            }
-
-            if (minDistance > 15)
+            if (Math.Abs(bestTaxi.Location - locationFrom) > 15)
                 throw new Exception("There are no available taxi vehicles!");
-            return minTaxi;
+
+            return bestTaxi;
         }
 
-        private static Ride CreateRide(int locationFrom, int locationTo, Taxi bestTaxi)
+        private static Ride CreateRide(int locationFrom, int locationTo, TaxiDriver bestTaxiDriver)
         {
             Ride ride = new Ride();
-            ride.TaxiDriverId = bestTaxi.TaxiDriverId;
+            ride.TaxiDriverId = bestTaxiDriver.TaxiDriverId;
             ride.LocationFrom = locationFrom;
             ride.LocationTo = locationTo;
-            ride.TaxiDriverName = bestTaxi.TaxiDriverName;
+            ride.TaxiDriverName = bestTaxiDriver.Name;
             return ride;
         }
 
-        private static void CalculatePrice(int locationFrom, int locationTo, int rideType, DateTime time, Taxi bestTaxi, Ride ride)
+        private static void CalculatePrice(int locationFrom, int locationTo, int rideType, DateTime time, TaxiDriver bestTaxiDriver, Ride ride)
         {
-            switch (bestTaxi.TaxiCompany)
+            switch (bestTaxiDriver.CompanyName)
             {
                 case "Naxi":
                     {
@@ -98,26 +90,7 @@ namespace TaxiDispatcher.App
         public void AcceptRide(Ride ride)
         {
             InMemoryRideDataBase.SaveRide(ride);
-
-            if (taxi1.TaxiDriverId == ride.TaxiDriverId)
-            {
-                taxi1.Location = ride.LocationTo;
-            }
-
-            if (taxi2.TaxiDriverId == ride.TaxiDriverId)
-            {
-                taxi2.Location = ride.LocationTo;
-            }
-
-            if (taxi3.TaxiDriverId == ride.TaxiDriverId)
-            {
-                taxi3.Location = ride.LocationTo;
-            }
-
-            if (taxi4.TaxiDriverId == ride.TaxiDriverId)
-            {
-                taxi4.Location = ride.LocationTo;
-            }
+            _taxiDriverRepo.TaxiDrivers.Find(t => t.TaxiDriverId == ride.TaxiDriverId).Location = ride.LocationTo;
 
             Console.WriteLine("Ride accepted, waiting for driver: " + ride.TaxiDriverName);
         }
