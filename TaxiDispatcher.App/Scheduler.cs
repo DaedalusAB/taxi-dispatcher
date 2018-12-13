@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TaxiDispatcher.App.Models;
+using TaxiDispatcher.App.Repos;
 
 namespace TaxiDispatcher.App
 {

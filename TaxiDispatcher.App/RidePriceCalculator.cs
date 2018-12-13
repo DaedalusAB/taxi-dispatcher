@@ -1,4 +1,5 @@
 ﻿using System;
+using TaxiDispatcher.App.Models;
 
 namespace TaxiDispatcher.App
 {

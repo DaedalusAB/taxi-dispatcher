@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TaxiDispatcher.App
+namespace TaxiDispatcher.App.Models
 {
     public class Ride
     {
