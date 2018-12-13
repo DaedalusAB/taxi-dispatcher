@@ -55,5 +55,8 @@ namespace TaxiDispatcher.App
 
         public List<Ride> RidesOfTaxi(int driverId) =>
             _rideRepository.Rides.Where(r => r.Taxi.TaxiDriverId == driverId).ToList();
+
+        public int EarningsOfTaxiDriver(int driverId) =>
+            RidesOfTaxi(driverId).Sum(r => r.Price);
     }
 }

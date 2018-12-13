@@ -96,13 +96,11 @@ namespace TaxiDispatcher.Client
             }
 
             Console.WriteLine("Driver with ID = 2 earned today:");
-            int total = 0;
-            foreach (Ride r in scheduler.RidesOfTaxi(2))
+            foreach (var r in scheduler.RidesOfTaxi(2))
             {
-                total += r.Price;
                 Console.WriteLine("Price: " + r.Price);
             }
-            Console.WriteLine("Total: " + total);
+            Console.WriteLine("Total: " + scheduler.EarningsOfTaxiDriver(2));
         }
     }
 }
