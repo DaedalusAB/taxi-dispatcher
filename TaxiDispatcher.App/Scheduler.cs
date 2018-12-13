@@ -9,8 +9,6 @@ namespace TaxiDispatcher.App
     public class Scheduler
     {
         private const int MaxAcceptableDistance = 15;
-        private const int ExpensiveHoursStart = 22;
-        private const int ExpensiveHoursEnd = 6;
 
         private readonly RideRepository _rideRepository;
         private readonly TaxiRepository _taxiRepository;
@@ -18,9 +16,9 @@ namespace TaxiDispatcher.App
 
         public Scheduler(RideRepository rideRepository, TaxiRepository taxiRepository, RidePriceCalculator ridePriceCalculator)
         {
-            _rideRepository = rideRepository;
-            _taxiRepository = taxiRepository;
-            _ridePriceCalculator = ridePriceCalculator;
+            _rideRepository = rideRepository ?? throw new ArgumentNullException(nameof(rideRepository));
+            _taxiRepository = taxiRepository ?? throw new ArgumentNullException(nameof(taxiRepository));
+            _ridePriceCalculator = ridePriceCalculator ?? throw new ArgumentNullException(nameof(ridePriceCalculator));
         }
 
         public Ride OrderRide(int locationFrom, int locationTo, RideTypeEnum rideType, DateTime time)
