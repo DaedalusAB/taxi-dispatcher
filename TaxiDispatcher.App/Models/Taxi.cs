@@ -2,7 +2,7 @@
 
 namespace TaxiDispatcher.App.Models
 {
-    public class Taxi
+    public class Taxi   //  maybe should be renamed to TaxiDriver
     {
         public int TaxiDriverId { get; }
         public string DriverName { get; }
