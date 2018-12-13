@@ -10,10 +10,10 @@ namespace TaxiDispatcher.Client
         {
             var taxiDriverRepo = new TaxiDriverRepo(new List<Taxi>()
             {
-                new Taxi { TaxiDriverId = 1, DriverName = "Predrag", Company = new TaxiCompany("Naxi", 10), Location = 1 },
-                new Taxi { TaxiDriverId = 2, DriverName = "Nenad", Company = new TaxiCompany("Naxi", 10), Location = 4 },
-                new Taxi { TaxiDriverId = 3, DriverName = "Dragan", Company = new TaxiCompany("Alfa", 15), Location = 6 },
-                new Taxi { TaxiDriverId = 4, DriverName = "Goran", Company = new TaxiCompany("Gold", 13), Location = 7 }
+                new Taxi(1, "Predrag", new TaxiCompany("Naxi", 10), 1),
+                new Taxi(2, "Nenad", new TaxiCompany("Naxi", 10), 4),
+                new Taxi(3, "Dragan", new TaxiCompany("Alfa", 15), 6),
+                new Taxi(4, "Goran", new TaxiCompany("Gold", 13), 7)
             });
 
             var scheduler = new Scheduler(taxiDriverRepo);
