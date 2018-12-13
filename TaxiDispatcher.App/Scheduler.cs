@@ -13,12 +13,14 @@ namespace TaxiDispatcher.App
         private readonly RideRepository _rideRepository;
         private readonly TaxiRepository _taxiRepository;
         private readonly RidePriceCalculator _ridePriceCalculator;
+        private readonly Logger _logger;
 
-        public Scheduler(RideRepository rideRepository, TaxiRepository taxiRepository, RidePriceCalculator ridePriceCalculator)
+        public Scheduler(RideRepository rideRepository, TaxiRepository taxiRepository, RidePriceCalculator ridePriceCalculator, Logger logger)
         {
             _rideRepository = rideRepository ?? throw new ArgumentNullException(nameof(rideRepository));
             _taxiRepository = taxiRepository ?? throw new ArgumentNullException(nameof(taxiRepository));
             _ridePriceCalculator = ridePriceCalculator ?? throw new ArgumentNullException(nameof(ridePriceCalculator));
+            _logger = logger ?? throw  new ArgumentNullException(nameof(logger));
         }
 
         public Ride OrderRide(int locationFrom, int locationTo, RideTypeEnum rideType, DateTime time)
@@ -27,7 +29,7 @@ namespace TaxiDispatcher.App
             var price = CalculatePrice(locationFrom, locationTo, rideType, time, bestTaxi.Company);
             var ride = new Ride(locationFrom, locationTo, rideType, time, bestTaxi, price);
 
-            Console.WriteLine("Ride ordered, price: " + ride.Price);
+            _logger.WriteLine("Ride ordered, price: " + ride.Price);
 
             return ride;
         }
@@ -50,7 +52,7 @@ namespace TaxiDispatcher.App
             _rideRepository.SaveRide(ride);
             _taxiRepository.TaxiDrivers.Find(t => t.TaxiDriverId == ride.Taxi.TaxiDriverId).MoveToLocation(ride.LocationTo);
 
-            Console.WriteLine("Ride accepted, waiting for driver: " + ride.Taxi.DriverName);
+            _logger.WriteLine("Ride accepted, waiting for driver: " + ride.Taxi.DriverName);
         }
 
         public List<Ride> RidesOfTaxi(int driverId) =>

@@ -8,10 +8,11 @@ namespace TaxiDispatcher.Client
 {
     public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             var rideRepo = new RideRepository();
             var ridePriceCalc = new RidePriceCalculator();
+            var logger = new Logger();
             var taxiRepository = new TaxiRepository(new List<Taxi>()
             {
                 new Taxi(1, "Predrag", new TaxiCompany("Naxi", 10), 1),
@@ -21,7 +22,7 @@ namespace TaxiDispatcher.Client
             });
             
 
-            var scheduler = new Scheduler(rideRepo, taxiRepository, ridePriceCalc);
+            var scheduler = new Scheduler(rideRepo, taxiRepository, ridePriceCalc, logger);
 
             try
             {
