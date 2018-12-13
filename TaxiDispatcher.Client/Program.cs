@@ -97,7 +97,7 @@ namespace TaxiDispatcher.Client
             }
 
             Console.WriteLine("Driver with ID = 2 earned today:");
-            foreach (var r in scheduler.RidesOfTaxi(2))
+            foreach (var r in scheduler.RidesOfTaxiDriver(2))
             {
                 Console.WriteLine("Price: " + r.Price);
             }

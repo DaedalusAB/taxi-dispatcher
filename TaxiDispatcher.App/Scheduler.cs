@@ -26,7 +26,7 @@ namespace TaxiDispatcher.App
         public Ride OrderRide(int locationFrom, int locationTo, RideTypeEnum rideType, DateTime time)
         {
             var bestTaxi = FindBestTaxi(locationFrom);
-            var price = CalculatePrice(locationFrom, locationTo, rideType, time, bestTaxi.Company);
+            var price = _ridePriceCalculator.CalculatePrice(locationFrom, locationTo, rideType, time, bestTaxi.Company);
             var ride = new Ride(locationFrom, locationTo, rideType, time, bestTaxi, price);
 
             _logger.WriteLine("Ride ordered, price: " + ride.Price);
@@ -43,10 +43,7 @@ namespace TaxiDispatcher.App
 
             return bestTaxi;
         }
-
-        private int CalculatePrice(int locationFrom, int locationTo, RideTypeEnum rideType, DateTime time, TaxiCompany company) =>
-            _ridePriceCalculator.CalculatePrice(locationFrom, locationTo, rideType, time, company);
-
+        
         public void AcceptRide(Ride ride)
         {
             _rideRepository.SaveRide(ride);
@@ -55,10 +52,10 @@ namespace TaxiDispatcher.App
             _logger.WriteLine("Ride accepted, waiting for driver: " + ride.Taxi.DriverName);
         }
 
-        public List<Ride> RidesOfTaxi(int driverId) =>
+        public List<Ride> RidesOfTaxiDriver(int driverId) =>
             _rideRepository.Rides.Where(r => r.Taxi.TaxiDriverId == driverId).ToList();
 
         public int EarningsOfTaxiDriver(int driverId) =>
-            RidesOfTaxi(driverId).Sum(r => r.Price);
+            RidesOfTaxiDriver(driverId).Sum(r => r.Price);
     }
 }
