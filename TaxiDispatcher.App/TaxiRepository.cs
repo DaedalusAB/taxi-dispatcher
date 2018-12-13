@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace TaxiDispatcher.App
 {
-    public class TaxiDriverRepo
+    public class TaxiRepository
     {
         public List<Taxi> TaxiDrivers { get; }
 
-        public TaxiDriverRepo(List<Taxi> taxiDrivers)
+        public TaxiRepository(List<Taxi> taxiDrivers)
         {
             TaxiDrivers = taxiDrivers;
         }

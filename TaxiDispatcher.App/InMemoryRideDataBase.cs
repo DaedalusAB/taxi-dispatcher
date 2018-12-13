@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using static TaxiDispatcher.App.Scheduler;
 
 namespace TaxiDispatcher.App
 {
@@ -19,7 +18,7 @@ namespace TaxiDispatcher.App
         public static Ride GetRide(int id) =>
             Rides.FirstOrDefault(r => r.RideId == id);
 
-        public static List<int> GetRideIds() =>
+        public static List<int> GetRideIds() =>         //  this can go
             Rides.Select(r => r.RideId).ToList();
     }
 }

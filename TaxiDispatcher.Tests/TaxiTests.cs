@@ -7,7 +7,8 @@ namespace TaxiDispatcher.Tests
 {
     public class TaxiTests
     {
-        private TaxiDriverRepo _taxiDriverRepo = new TaxiDriverRepo(new List<Taxi>()
+        private RideRepository _rideRepository = new RideRepository();
+        private TaxiRepository _taxiRepository = new TaxiRepository(new List<Taxi>()
         {
             new Taxi(1, "Predrag", new TaxiCompany("Naxi", 10), 1),
             new Taxi(2, "Nenad", new TaxiCompany("Naxi", 10), 4),
@@ -18,7 +19,7 @@ namespace TaxiDispatcher.Tests
         [Fact]
         public void RideFrom5To0()
         {
-            Scheduler scheduler = new Scheduler(_taxiDriverRepo);
+            Scheduler scheduler = new Scheduler(_rideRepository, _taxiRepository);
             var ride = scheduler.OrderRide(5, 0, RideTypeEnum.City, new DateTime(2018, 1, 1, 23, 0, 0));
             scheduler.AcceptRide(ride);
 
@@ -29,7 +30,7 @@ namespace TaxiDispatcher.Tests
         [Fact]
         public void RideFrom0to12()
         {
-            Scheduler scheduler = new Scheduler(_taxiDriverRepo);
+            Scheduler scheduler = new Scheduler(_rideRepository, _taxiRepository);
             var ride = scheduler.OrderRide(5, 0, RideTypeEnum.City, new DateTime(2018, 1, 1, 23, 0, 0));
             scheduler.AcceptRide(ride);
             ride = scheduler.OrderRide(0, 12, RideTypeEnum.InnerCity, new DateTime(2018, 1, 1, 9, 0, 0));
@@ -42,7 +43,7 @@ namespace TaxiDispatcher.Tests
         [Fact]
         public void RideFrom5To0WhileFirstDriverIsBusy()
         {
-            Scheduler scheduler = new Scheduler(_taxiDriverRepo);
+            Scheduler scheduler = new Scheduler(_rideRepository, _taxiRepository);
 
             //  setup (make a driver busy)
             var ride = scheduler.OrderRide(5, 0, RideTypeEnum.City, new DateTime(2018, 1, 1, 23, 0, 0));
@@ -59,7 +60,7 @@ namespace TaxiDispatcher.Tests
         [Fact]
         public void OrderWhenDriversAreTooFar()
         {
-            Scheduler scheduler = new Scheduler(_taxiDriverRepo);
+            Scheduler scheduler = new Scheduler(_rideRepository, _taxiRepository);
             var exception = Assert.Throws<Exception>(() => scheduler.OrderRide(35, 12, RideTypeEnum.City, new DateTime(2018, 1, 1, 11, 0, 0)));
             Assert.Equal("There are no available taxi vehicles!", exception.Message);
             
@@ -68,7 +69,7 @@ namespace TaxiDispatcher.Tests
         [Fact]
         public void DailyEarningsOfDriver2()
         {
-            Scheduler scheduler = new Scheduler(_taxiDriverRepo);
+            Scheduler scheduler = new Scheduler(_rideRepository, _taxiRepository);
 
             //  setup
             var ride = scheduler.OrderRide(5, 0, RideTypeEnum.City, new DateTime(2018, 1, 1, 23, 0, 0));

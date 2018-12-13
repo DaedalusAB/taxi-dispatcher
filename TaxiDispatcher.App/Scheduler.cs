@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TaxiDispatcher.App
 {
@@ -7,11 +8,13 @@ namespace TaxiDispatcher.App
     {
         private const int MaxAcceptableDistance = 15;
 
-        private readonly TaxiDriverRepo _taxiDriverRepo;
+        private readonly RideRepository _rideRepository;
+        private readonly TaxiRepository _taxiRepository;
 
-        public Scheduler(TaxiDriverRepo taxiDriverRepo)
+        public Scheduler(RideRepository rideRepository, TaxiRepository taxiRepository)
         {
-            _taxiDriverRepo = taxiDriverRepo;
+            _rideRepository = rideRepository;
+            _taxiRepository = taxiRepository;
         }
 
         public Ride OrderRide(int locationFrom, int locationTo, RideTypeEnum rideType, DateTime time)
@@ -27,7 +30,7 @@ namespace TaxiDispatcher.App
 
         private Taxi FindBestTaxi(int locationFrom)
         {
-            var bestTaxi = _taxiDriverRepo.BestTaxiForLocation(locationFrom);
+            var bestTaxi = _taxiRepository.BestTaxiForLocation(locationFrom);
 
             if (Math.Abs(bestTaxi.Location - locationFrom) > MaxAcceptableDistance)
                 throw new Exception("There are no available taxi vehicles!");
@@ -54,24 +57,13 @@ namespace TaxiDispatcher.App
 
         public void AcceptRide(Ride ride)
         {
-            InMemoryRideDatabase.SaveRide(ride);
-            _taxiDriverRepo.TaxiDrivers.Find(t => t.TaxiDriverId == ride.Taxi.TaxiDriverId).Location = ride.LocationTo;
+            _rideRepository.SaveRide(ride);
+            _taxiRepository.TaxiDrivers.Find(t => t.TaxiDriverId == ride.Taxi.TaxiDriverId).MoveToLocation(ride.LocationTo);
 
             Console.WriteLine("Ride accepted, waiting for driver: " + ride.Taxi.DriverName);
         }
 
-        public List<Ride> GetRideList(int driverId)
-        {
-            List<Ride> rides = new List<Ride>();
-            List<int> ids = InMemoryRideDatabase.GetRideIds();
-            foreach (int id in ids)
-            {
-                Ride ride = InMemoryRideDatabase.GetRide(id);
-                if (ride.Taxi.TaxiDriverId == driverId)
-                    rides.Add(ride);
-            }
-
-            return rides;
-        }
+        public List<Ride> GetRideList(int driverId) => 
+            _rideRepository.Rides.Where(r => r.Taxi.TaxiDriverId == driverId).ToList();
     }
 }

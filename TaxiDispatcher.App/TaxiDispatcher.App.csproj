@@ -43,11 +43,12 @@
     <Compile Include="InMemoryRideDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ride.cs" />
+    <Compile Include="RideRepository.cs" />
     <Compile Include="RideTypeEnum.cs" />
     <Compile Include="Scheduler.cs" />
     <Compile Include="Taxi.cs" />
     <Compile Include="TaxiCompany.cs" />
-    <Compile Include="TaxiDriverRepo.cs" />
+    <Compile Include="TaxiRepository.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
