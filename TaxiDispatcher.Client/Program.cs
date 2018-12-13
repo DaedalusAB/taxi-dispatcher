@@ -9,6 +9,7 @@ namespace TaxiDispatcher.Client
         static void Main(string[] args)
         {
             var rideRepo = new RideRepository();
+            var ridePriceCalc = new RidePriceCalculator();
             var taxiRepository = new TaxiRepository(new List<Taxi>()
             {
                 new Taxi(1, "Predrag", new TaxiCompany("Naxi", 10), 1),
@@ -18,7 +19,7 @@ namespace TaxiDispatcher.Client
             });
             
 
-            var scheduler = new Scheduler(rideRepo, taxiRepository);
+            var scheduler = new Scheduler(rideRepo, taxiRepository, ridePriceCalc);
 
             try
             {
@@ -94,7 +95,7 @@ namespace TaxiDispatcher.Client
 
             Console.WriteLine("Driver with ID = 2 earned today:");
             int total = 0;
-            foreach (Ride r in scheduler.GetRideList(2))
+            foreach (Ride r in scheduler.RidesOfTaxi(2))
             {
                 total += r.Price;
                 Console.WriteLine("Price: " + r.Price);

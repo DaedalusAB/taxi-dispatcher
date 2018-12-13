@@ -43,6 +43,7 @@
     <Compile Include="InMemoryRideDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ride.cs" />
+    <Compile Include="RidePriceCalculator.cs" />
     <Compile Include="RideRepository.cs" />
     <Compile Include="RideTypeEnum.cs" />
     <Compile Include="Scheduler.cs" />

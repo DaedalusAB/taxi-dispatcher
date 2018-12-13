@@ -7,14 +7,18 @@ namespace TaxiDispatcher.App
     public class Scheduler
     {
         private const int MaxAcceptableDistance = 15;
+        private const int ExpensiveHoursStart = 22;
+        private const int ExpensiveHoursEnd = 6;
 
         private readonly RideRepository _rideRepository;
         private readonly TaxiRepository _taxiRepository;
+        private readonly RidePriceCalculator _ridePriceCalculator;
 
-        public Scheduler(RideRepository rideRepository, TaxiRepository taxiRepository)
+        public Scheduler(RideRepository rideRepository, TaxiRepository taxiRepository, RidePriceCalculator ridePriceCalculator)
         {
             _rideRepository = rideRepository;
             _taxiRepository = taxiRepository;
+            _ridePriceCalculator = ridePriceCalculator;
         }
 
         public Ride OrderRide(int locationFrom, int locationTo, RideTypeEnum rideType, DateTime time)
@@ -38,22 +42,8 @@ namespace TaxiDispatcher.App
             return bestTaxi;
         }
 
-        private int CalculatePrice(int locationFrom, int locationTo, RideTypeEnum rideTypeEnum, DateTime time, TaxiCompany company)
-        {
-            var price = company.PricePerUnitOfDistance * Math.Abs(locationFrom - locationTo);
-
-            if (rideTypeEnum == RideTypeEnum.InnerCity)
-            {
-                price *= 2;
-            }
-
-            if (time.Hour < 6 || time.Hour > 22)
-            {
-                price *= 2;
-            }
-
-            return price;
-        }
+        private int CalculatePrice(int locationFrom, int locationTo, RideTypeEnum rideType, DateTime time, TaxiCompany company) =>
+            _ridePriceCalculator.CalculatePrice(locationFrom, locationTo, rideType, time, company);
 
         public void AcceptRide(Ride ride)
         {
@@ -63,7 +53,7 @@ namespace TaxiDispatcher.App
             Console.WriteLine("Ride accepted, waiting for driver: " + ride.Taxi.DriverName);
         }
 
-        public List<Ride> GetRideList(int driverId) => 
+        public List<Ride> RidesOfTaxi(int driverId) =>
             _rideRepository.Rides.Where(r => r.Taxi.TaxiDriverId == driverId).ToList();
     }
 }
