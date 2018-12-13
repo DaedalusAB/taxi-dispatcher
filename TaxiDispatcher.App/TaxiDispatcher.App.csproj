@@ -45,7 +45,7 @@
     <Compile Include="Models\Ride.cs" />
     <Compile Include="RidePriceCalculator.cs" />
     <Compile Include="Repos\RideRepository.cs" />
-    <Compile Include="RideTypeEnum.cs" />
+    <Compile Include="Models\RideTypeEnum.cs" />
     <Compile Include="Scheduler.cs" />
     <Compile Include="Models\Taxi.cs" />
     <Compile Include="Models\TaxiCompany.cs" />

@@ -1,4 +1,4 @@
-﻿namespace TaxiDispatcher.App
+﻿namespace TaxiDispatcher.App.Models
 {
     public enum RideTypeEnum
     {
