@@ -10,9 +10,7 @@ namespace TaxiDispatcher.App.Repos
 
         public static void SaveRide(Ride ride)
         {
-            //  if Rides could be removed from list, this wouldn't guarantee a unique ID anymore;
-            //  but rides aren't removed, so I'm leaving it like this
-            ride.RideId = Rides.Count + 1;
+            ride.RideId = Rides.Any() ? Rides.Max(r => r.RideId) + 1 : 1;
             Rides.Add(ride);
         }
 
