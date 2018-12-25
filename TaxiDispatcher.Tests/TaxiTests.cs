@@ -65,9 +65,9 @@ namespace TaxiDispatcher.Tests
         public void OrderWhenDriversAreTooFar()
         {
             var scheduler = new Scheduler(_rideRepository, _taxiRepository, _ridePriceCalculator, _logger);
-            var exception = Assert.Throws<Exception>(() => scheduler.OrderRide(35, 12, RideTypeEnum.City, new DateTime(2018, 1, 1, 11, 0, 0)));
+            var ride = scheduler.OrderRide(35, 12, RideTypeEnum.City, new DateTime(2018, 1, 1, 11, 0, 0));
 
-            Assert.Equal("There are no available taxi vehicles!", exception.Message);
+            Assert.Null(ride);
             
         }
 

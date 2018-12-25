@@ -26,6 +26,13 @@ namespace TaxiDispatcher.App
         public Ride OrderRide(int locationFrom, int locationTo, RideTypeEnum rideType, DateTime time)
         {
             var bestTaxi = FindBestTaxi(locationFrom);
+
+            if (bestTaxi == null)
+            {
+                _logger.WriteLine("Could not find a suitable taxi (all are too far)");
+                return null;
+            }
+
             var price = _ridePriceCalculator.CalculatePrice(locationFrom, locationTo, rideType, time, bestTaxi.Company);
             var ride = new Ride(locationFrom, locationTo, rideType, time, bestTaxi, price);
 
@@ -38,14 +45,18 @@ namespace TaxiDispatcher.App
         {
             var bestTaxi = _taxiRepository.BestTaxiForLocation(locationFrom);
 
-            if (Math.Abs(bestTaxi.Location - locationFrom) > MaxAcceptableDistance)
-                throw new Exception("There are no available taxi vehicles!");
-
-            return bestTaxi;
+            return bestTaxi.ProximityToLocation(locationFrom) > MaxAcceptableDistance 
+                ? null 
+                : bestTaxi;
         }
         
         public void AcceptRide(Ride ride)
         {
+            if (ride == null)
+            {
+                return;
+            }
+
             _rideRepository.SaveRide(ride);
             _taxiRepository.TaxiDrivers.Find(t => t.TaxiDriverId == ride.Taxi.TaxiDriverId).MoveToLocation(ride.LocationTo);
 
