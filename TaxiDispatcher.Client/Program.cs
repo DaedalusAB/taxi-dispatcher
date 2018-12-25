@@ -25,25 +25,25 @@ namespace TaxiDispatcher.Client
             var scheduler = new Scheduler(rideRepo, taxiRepository, ridePriceCalc, logger);
 
             Console.WriteLine("Ordering ride from 5 to 0...");
-            var ride1 = scheduler.OrderRide(5, 0, RideTypeEnum.City, new DateTime(2018, 1, 1, 23, 0, 0));
+            var ride1 = scheduler.OrderCityRide(5, 0, new DateTime(2018, 1, 1, 23, 0, 0));
             scheduler.AcceptRide(ride1);
             Console.WriteLine("");
 
 
             Console.WriteLine("Ordering ride from 0 to 12...");
-            var ride2 = scheduler.OrderRide(0, 12, RideTypeEnum.InnerCity, new DateTime(2018, 1, 1, 9, 0, 0));
+            var ride2 = scheduler.OrderInnerCityRide(0, 12, new DateTime(2018, 1, 1, 9, 0, 0));
             scheduler.AcceptRide(ride2);
             Console.WriteLine("");
 
 
             Console.WriteLine("Ordering ride from 5 to 0...");
-            var ride3 = scheduler.OrderRide(5, 0, RideTypeEnum.City, new DateTime(2018, 1, 1, 11, 0, 0));
+            var ride3 = scheduler.OrderCityRide(5, 0, new DateTime(2018, 1, 1, 11, 0, 0));
             scheduler.AcceptRide(ride3);
             Console.WriteLine("");
 
 
             Console.WriteLine("Ordering ride from 35 to 12...");
-            var ride4 = scheduler.OrderRide(35, 12, RideTypeEnum.City, new DateTime(2018, 1, 1, 11, 0, 0));
+            var ride4 = scheduler.OrderCityRide(35, 12, new DateTime(2018, 1, 1, 11, 0, 0));
             scheduler.AcceptRide(ride4);
             Console.WriteLine("");
 

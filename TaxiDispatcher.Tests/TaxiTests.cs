@@ -24,7 +24,7 @@ namespace TaxiDispatcher.Tests
         public void RideFrom5To0()
         {
             var scheduler = new Scheduler(_rideRepository, _taxiRepository, _ridePriceCalculator, _logger);
-            var ride = scheduler.OrderRide(5, 0, RideTypeEnum.City, new DateTime(2018, 1, 1, 23, 0, 0));
+            var ride = scheduler.OrderCityRide(5, 0, new DateTime(2018, 1, 1, 23, 0, 0));
             scheduler.AcceptRide(ride);
 
             Assert.Equal(100, ride.Price);
@@ -35,9 +35,9 @@ namespace TaxiDispatcher.Tests
         public void RideFrom0To12()
         {
             var scheduler = new Scheduler(_rideRepository, _taxiRepository, _ridePriceCalculator, _logger);
-            var ride = scheduler.OrderRide(5, 0, RideTypeEnum.City, new DateTime(2018, 1, 1, 23, 0, 0));
+            var ride = scheduler.OrderCityRide(5, 0, new DateTime(2018, 1, 1, 23, 0, 0));
             scheduler.AcceptRide(ride);
-            ride = scheduler.OrderRide(0, 12, RideTypeEnum.InnerCity, new DateTime(2018, 1, 1, 9, 0, 0));
+            ride = scheduler.OrderInnerCityRide(0, 12, new DateTime(2018, 1, 1, 9, 0, 0));
             scheduler.AcceptRide(ride);
 
             Assert.Equal(240, ride.Price);
@@ -50,11 +50,11 @@ namespace TaxiDispatcher.Tests
             var scheduler = new Scheduler(_rideRepository, _taxiRepository, _ridePriceCalculator, _logger);
 
             //  setup (make a driver busy)
-            var ride = scheduler.OrderRide(5, 0, RideTypeEnum.City, new DateTime(2018, 1, 1, 23, 0, 0));
+            var ride = scheduler.OrderCityRide(5, 0, new DateTime(2018, 1, 1, 23, 0, 0));
             scheduler.AcceptRide(ride);
 
-            
-            ride = scheduler.OrderRide(5, 0, RideTypeEnum.City, new DateTime(2018, 1, 1, 11, 0, 0));
+
+            ride = scheduler.OrderCityRide(5, 0, new DateTime(2018, 1, 1, 11, 0, 0));
             scheduler.AcceptRide(ride);
 
             Assert.Equal(75, ride.Price);
@@ -65,10 +65,10 @@ namespace TaxiDispatcher.Tests
         public void OrderWhenDriversAreTooFar()
         {
             var scheduler = new Scheduler(_rideRepository, _taxiRepository, _ridePriceCalculator, _logger);
-            var ride = scheduler.OrderRide(35, 12, RideTypeEnum.City, new DateTime(2018, 1, 1, 11, 0, 0));
+            var ride = scheduler.OrderCityRide(35, 12, new DateTime(2018, 1, 1, 11, 0, 0));
 
             Assert.Null(ride);
-            
+
         }
 
         [Fact]
@@ -77,11 +77,11 @@ namespace TaxiDispatcher.Tests
             var scheduler = new Scheduler(_rideRepository, _taxiRepository, _ridePriceCalculator, _logger);
 
             //  setup
-            var ride = scheduler.OrderRide(5, 0, RideTypeEnum.City, new DateTime(2018, 1, 1, 23, 0, 0));
+            var ride = scheduler.OrderCityRide(5, 0, new DateTime(2018, 1, 1, 23, 0, 0));
             scheduler.AcceptRide(ride);
-            ride = scheduler.OrderRide(0, 12, RideTypeEnum.InnerCity, new DateTime(2018, 1, 1, 9, 0, 0));
+            ride = scheduler.OrderInnerCityRide(0, 12, new DateTime(2018, 1, 1, 9, 0, 0));
             scheduler.AcceptRide(ride);
-            ride = scheduler.OrderRide(5, 0, RideTypeEnum.City, new DateTime(2018, 1, 1, 11, 0, 0));
+            ride = scheduler.OrderCityRide(5, 0, new DateTime(2018, 1, 1, 11, 0, 0));
             scheduler.AcceptRide(ride);
 
 

@@ -20,10 +20,20 @@ namespace TaxiDispatcher.App
             _rideRepository = rideRepository ?? throw new ArgumentNullException(nameof(rideRepository));
             _taxiRepository = taxiRepository ?? throw new ArgumentNullException(nameof(taxiRepository));
             _ridePriceCalculator = ridePriceCalculator ?? throw new ArgumentNullException(nameof(ridePriceCalculator));
-            _logger = logger ?? throw  new ArgumentNullException(nameof(logger));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public Ride OrderRide(int locationFrom, int locationTo, RideTypeEnum rideType, DateTime time)
+        public Ride OrderCityRide(int locationFrom, int locationTo, DateTime time)
+        {
+            return OrderRide(locationFrom, locationTo, RideTypeEnum.City, time);
+        }
+
+        public Ride OrderInnerCityRide(int locationFrom, int locationTo, DateTime time)
+        {
+            return OrderRide(locationFrom, locationTo, RideTypeEnum.InnerCity, time);
+        }
+
+        private Ride OrderRide(int locationFrom, int locationTo, RideTypeEnum rideType, DateTime time)
         {
             var bestTaxi = FindBestTaxi(locationFrom);
 
@@ -45,11 +55,11 @@ namespace TaxiDispatcher.App
         {
             var bestTaxi = _taxiRepository.BestTaxiForLocation(locationFrom);
 
-            return bestTaxi.ProximityToLocation(locationFrom) > MaxAcceptableDistance 
-                ? null 
+            return bestTaxi.ProximityToLocation(locationFrom) > MaxAcceptableDistance
+                ? null
                 : bestTaxi;
         }
-        
+
         public void AcceptRide(Ride ride)
         {
             if (ride == null)
