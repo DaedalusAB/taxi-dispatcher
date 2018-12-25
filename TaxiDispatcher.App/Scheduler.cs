@@ -23,15 +23,11 @@ namespace TaxiDispatcher.App
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public Ride OrderCityRide(int locationFrom, int locationTo, DateTime time)
-        {
-            return OrderRide(locationFrom, locationTo, RideTypeEnum.City, time);
-        }
+        public Ride OrderCityRide(int locationFrom, int locationTo, DateTime time) => 
+            OrderRide(locationFrom, locationTo, RideTypeEnum.City, time);
 
-        public Ride OrderInnerCityRide(int locationFrom, int locationTo, DateTime time)
-        {
-            return OrderRide(locationFrom, locationTo, RideTypeEnum.InnerCity, time);
-        }
+        public Ride OrderInnerCityRide(int locationFrom, int locationTo, DateTime time) => 
+            OrderRide(locationFrom, locationTo, RideTypeEnum.InnerCity, time);
 
         private Ride OrderRide(int locationFrom, int locationTo, RideTypeEnum rideType, DateTime time)
         {
@@ -67,8 +63,8 @@ namespace TaxiDispatcher.App
                 return;
             }
 
-            _rideRepository.SaveRide(ride);
             _taxiRepository.TaxiDrivers.Find(t => t.TaxiDriverId == ride.Taxi.TaxiDriverId).MoveToLocation(ride.LocationTo);
+            _rideRepository.SaveRide(ride);
 
             _logger.WriteLine("Ride accepted, waiting for driver: " + ride.Taxi.DriverName);
         }
