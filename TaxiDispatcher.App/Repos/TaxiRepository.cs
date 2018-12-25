@@ -21,9 +21,9 @@ namespace TaxiDispatcher.App.Repos
                 throw new Exception("There are no taxi drivers registered with the Scheduler");
             }
 
-            return TaxiDrivers.Aggregate(
-                (curBest, t) => (curBest == null || t.ProximityToLocation(locationFrom) < curBest.ProximityToLocation(locationFrom) ? t : curBest)
-            );
+            return TaxiDrivers
+                .OrderBy(t => t.ProximityToLocation(locationFrom))
+                .First();
         }
     }
 }
